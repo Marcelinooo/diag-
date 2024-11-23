@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Exames</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* Azul claro */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2e8b57; /* Verde */
+        }
+        .tab {
+            display: none;
+        }
+        .tab.active {
+            display: block;
+        }
+        .tab-links {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #add8e6; /* Azul claro */
+            border: 1px solid #ccc;
+            display: inline-block;
+            margin-right: 5px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .tab-links.active {
+            background: #87cefa; /* Azul mais escuro */
+        }
+        .tab-links:hover {
+            background: #b0e0e6; /* Azul claro ao passar o mouse */
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px; /* Aumentando a distância entre exames */
+        }
+        input[type="number"], input[type="text"], textarea {
+            width: calc(50% - 22px); /* Diminuindo a largura para 50% da tela */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #2e8b57; /* Verde */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #3cb371; /* Verde mais escuro ao passar o mouse */
+        }
+        .reference {
+            font-size: 0.9em; /* Fonte menor */
+            color: red; /* Cor vermelha */
+            margin-left: 10px; /* Espaço à esquerda */
+        }
+        .diagnostic-results {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #e6f7ff; /* Azul muito claro */
+        }
+        .diagnostic-suggestions {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #d9534f; /* Vermelho para sugestões */
+        }
+        .potential-diagnosis {
+            font-weight: bold;
+            color: #0000ff; /* Azul para diagnósticos potenciais */
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Formulário de Diagnóstico de Exames</h1>
+    <div>
+        <div class="tab-links active" onclick="showTab('hematologicos')">Exames Hematológicos</div>
+        <div class="tab-links" onclick="showTab('coagulograma')">Coagulograma</div>
+        <div class="tab-links" onclick="showTab('bioquimicos')">Exames Bioquímicos</div>
+        <div class="tab-links" onclick="showTab('diagnostico')">Diagnóstico</div>
+    </div>
+
+    <form id="examForm" onsubmit="return false;"> <!-- Impede o envio do formulário -->
+        <div id="hematologicos" class="tab active">
+            <h2>Exames Hematológicos</h2>
+            <label for="hemograma">Hemograma Completo:</label>
+            Contagem de glóbulos vermelhos: <input type="number" id="eritrócitos" onkeydown="return handleKeyDown(event)"> <span class="reference">(4,5 - 6,0 milhões/µL)</span><br>
+            Hemoglobina (Hb): <input type="number" id="hemoglobina" onkeydown="return handleKeyDown(event)"> <span class="reference">(13,5 - 17,5 g/dL)</span><br>
+            Hematócrito (Ht): <input type="number" id="hematocrito" onkeydown="return handleKeyDown(event)"> <span class="reference">(40% - 50%)</span><br>
+            Contagem de glóbulos brancos: <input type="number" id="leucocitos" onkeydown="return handleKeyDown(event)"> <span class="reference">(4.000 - 10.000 células/µL)</span><br>
+            <h3>Leucograma:</h3>
+            Neutrófilos: <input type="number" id="neutrofilos" onkeydown="return handleKeyDown(event)"> <span class="reference">(40% - 70%)</span><br>
+            Linfócitos: <input type="number" id="linfocitos" onkeydown="return handleKeyDown(event)"> <span class="reference">(20% - 45%)</span><br>
+            Monócitos: <input type="number" id="monocitos" onkeydown="return handleKeyDown(event)"> <span class="reference">(2% - 8%)</span><br>
+            Eosinófilos: <input type="number" id="eosinofilos" onkeydown="return handleKeyDown(event)"> <span class="reference">(1% - 4%)</span><br>
+            Basófilos: <input type="number" id="basofilos" onkeydown="return handleKeyDown(event)"> <span class="reference">(0% - 1%)</span><br>
+            Contagem de plaquetas: <input type="number" id="plaquetas" onkeydown="return handleKeyDown(event)"> <span class="reference">(150.000 - 450.000 células/µL)</span><br>
+            <h3>Índices hematimétricos:</h3>
+            VCM: <input type="number" id="vcm" onkeydown="return handleKeyDown(event)"> <span class="reference">(80 - 100 fL)</span><br>
+            HCM: <input type="number" id="hcm" onkeydown="return handleKeyDown(event)"> <span class="reference">(27 - 31 pg)</span><br>
+            CHCM: <input type="number" id="chcm" onkeydown="return handleKeyDown(event)"> <span class="reference">(32 - 36 g/dL)</span><br>
+            RDW: <input type="number" id="rdw" onkeydown="return handleKeyDown(event)"> <span class="reference">(11,5% - 14,5%)</span><br>
+            Teste de Reticulócitos: <input type="number" id="reticulocitos" onkeydown="return handleKeyDown(event)"> <span class="reference">(0,5% - 2,5%)</span><br>
+            VHS: <input type="number" id="vhs" onkeydown="return handleKeyDown(event)"> <span class="reference">(0 - 20 mm/h)</span><br>
+            Tipo Sanguíneo: <input type="text" id="tipoSanguineo" onkeydown="return handleKeyDown(event)"><br>
+        </div>
+
+        <div id="coagulograma" class="tab">
+            <h2>Coagulograma</h2>
+            Tempo de protrombina (TP): <input type="number" id="tp" onkeydown="return handleKeyDown(event)"> <span class="reference">(11 - 13,5 segundos)</span><br>
+            Tempo de tromboplastina parcial ativada (TTPA): <input type="number" id="ttpa" onkeydown="return handleKeyDown(event)"> <span class="reference">(25 - 35 segundos)</span><br>
+            Fibrinogênio: <input type="number" id="fibrinogeno" onkeydown="return handleKeyDown(event)"> <span class="reference">(200 - 400 mg/dL)</span><br>
+            Antitrombina III: <input type="number" id="antitrombina" onkeydown="return handleKeyDown(event)"> <span class="reference">(80% - 120%)</span><br>
+            D-dímero: <input type="number" id="d_diamero" onkeydown="return handleKeyDown(event)"> <span class="reference">(< 500 ng/mL)</span><br>
+        </div>
+
+        <div id="bioquimicos" class="tab">
+            <h2>Exames Bioquímicos</h2>
+            <h3>Função Renal:</h3>
+            Creatinina: <input type="number" id="creatinina" onkeydown="return handleKeyDown(event)"> <span class="reference">(0,6 - 1,2 mg/dL)</span><br>
+            Ureia: <input type="number" id="ureia" onkeydown="return handleKeyDown(event)"> <span class="reference">(10 - 20 mg/dL)</span><br>
+            Clearance de creatinina: <input type="number" id="clearance_creatinina" onkeydown="return handleKeyDown(event)"> <span class="reference">(90 - 120 mL/min)</span><br>
+            <h3>Função Hepática:</h3>
+            ALT: <input type="number" id="alt" onkeydown="return handleKeyDown(event)"> <span class="reference">(7 - 56 U/L)</span><br>
+            AST: <input type="number" id="ast" onkeydown="return handleKeyDown(event)"> <span class="reference">(10 - 40 U/L)</span><br>
+            Fosfatase alcalina: <input type="number" id="fosfatase_alcalina" onkeydown="return handleKeyDown(event)"> <span class="reference">(44 - 147 U/L)</span><br>
+            Bilirrubina total: <input type="number" id="bilirrubina_total" onkeydown="return handleKeyDown(event)"> <span class="reference">(0,1 - 1,2 mg/dL)</span><br>
+            Albumina: <input type="number" id="albumina" onkeydown="return handleKeyDown(event)"> <span class="reference">(3,5 - 5,0 g/dL)</span><br>
+            <h3>Outros Exames Bioquímicos:</h3>
+            Glicemia: <input type="number" id="glicemia" onkeydown="return handleKeyDown(event)"> <span class="reference">(70 - 100 mg/dL)</span><br>
+            Hemoglobina glicada: <input type="number" id="hba1c" onkeydown="return handleKeyDown(event)"> <span class="reference">(4% - 5,6%)</span><br>
+            Cálcio: <input type="number" id="calcio" onkeydown="return handleKeyDown(event)"> <span class="reference">(8,5 - 10,2 mg/dL)</span><br>
+            Sódio: <input type="number" id="sodio" onkeydown="return handleKeyDown(event)"> <span class="reference">(135 - 145 mEq/L)</span><br>
+            Potássio: <input type="number" id="potassio" onkeydown="return handleKeyDown(event)"> <span class="reference">(3,5 - 5,0 mEq/L)</span><br>
+        </div>
+
+        <div id="diagnostico" class="tab">
+            <h2>Diagnóstico</h2>
+            <div class="diagnostic-results" id="diagnosticResults"></div>
+            <div id="potentialDiagnoses" class="potential-diagnosis"></div>
+        </div>
+
+        <input type="submit" value="Enviar" onclick="return generateDiagnosis();">
+    </form>
+
+    <script>
+        function showTab(tabId) {
+            // Esconde todas as abas
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove a classe ativa das abas
+            const tabLinks = document.querySelectorAll('.tab-links');
+            tabLinks.forEach(link => link.classList.remove('active'));
+
+            // Mostra a aba selecionada
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-links[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Impede o envio do formulário
+                const inputs = Array.from(document.querySelectorAll('input[type="number"], input[type="text"]'));
+                const currentIndex = inputs.indexOf(event.target);
+                if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+                    inputs[currentIndex + 1].focus(); // Move o foco para o próximo campo
+                }
+            }
+        }
+
+        function generateDiagnosis() {
+            const results = [];
+            const suggestions = {
+                eritrócitos: {
+                    above: "Policitemia, desidratação, hipoxia crônica.",
+                    below: "Anemia (ferropriva, megaloblástica, etc.), hemorragia aguda, distúrbios da medula óssea."
+                },
+                hemoglobina: {
+                    above: "Policitemia, desidratação, doenças pulmonares crônicas.",
+                    below: "Anemia (ferropriva, hemolítica, por deficiência de vitamina B12 ou ácido fólico)."
+                },
+                hematocrito: {
+                    above: "Policitemia, desidratação, doenças pulmonares crônicas.",
+                    below: "Anemia, hipovolemia, sangramentos."
+                },
+                leucocitos: {
+                    above: "Infecções bacterianas, leucemia, inflamação aguda.",
+                    below: "Leucopenia (uso de medicamentos imunossupressores, doenças autoimunes, infecções virais, insuficiência medular)."
+                },
+                neutrofilos: {
+                    above: "Infecção bacteriana, inflamação aguda, leucemia.",
+                    below: "Neutropenia (infecções virais, quimioterapia, doenças autoimunes)."
+                },
+                linfocitos: {
+                    above: "Infecções virais, linfocitose (leucemia linfocítica crônica).",
+                    below: "Imunossupressão, infecções bacterianas crônicas, HIV."
+                },
+                monocitos: {
+                    above: "Infecção crônica, leucemia, doenças autoimunes.",
+                    below: "Neutropenia, problemas na medula óssea."
+                },
+                eosinofilos: {
+                    above: "Alergias, parasitoses, doenças autoimunes.",
+                    below: "Deficiência de eosinófilos (raramente clínico)."
+                },
+                basofilos: {
+                    above: "Leucemia mieloide crônica, distúrbios alérgicos.",
+                    below: "Não há significância clínica na diminuição."
+                },
+                plaquetas: {
+                    above: "Trombocitemia (distúrbios mieloproliferativos, infecções).",
+                    below: "Trombocitopenia (hemorragias, doenças autoimunes, anemia aplástica)."
+                },
+                vcm: {
+                    above: "Anemia macrocítica (deficiência de vitamina B12 ou ácido fólico).",
+                    below: "Anemia microcítica (ferropriva, talassemia)."
+                },
+                hcm: {
+                    above: "Anemia macrocítica, hipotiroidismo.",
+                    below: "Anemia microcítica, ferropriva."
+                },
+                chcm: {
+                    above: "Esferocitose hereditária, desidratação.",
+                    below: "Anemia hipocrômica (ferropriva)."
+                },
+                rdw: {
+                    above: "Anemia (ferropriva, hemolítica, deficiência de B12 ou ácido fólico).",
+                    below: "Não tem grande relevância clínica."
+                },
+                reticulocitos: {
+                    above: "Hemorragia aguda, hemólise, resposta regenerativa.",
+                    below: "Anemia hipoproliferativa, insuficiência medular."
+                },
+                vhs: {
+                    above: "Inflamação, infecções, doenças autoimunes, câncer.",
+                    below: "Não é clinicamente relevante."
+                }
+            };
+
+            const referenceRanges = {
+                eritrócitos: [4.5, 6.0],
+                hemoglobina: [13.5, 17.5],
+                hematocrito: [40, 50],
+                leucocitos: [4000, 10000],
+                neutrofilos: [40, 70],
+                linfocitos: [20, 45],
+                monocitos: [2, 8],
+                eosinofilos: [1, 4],
+                basofilos: [0, 1],
+                plaquetas: [150000, 450000],
+                vcm: [80, 100],
+                hcm: [27, 31],
+                chcm: [32, 36],
+                rdw: [11.5, 14.5],
+                reticulocitos: [0.5, 2.5],
+                vhs: [0, 20]
+            };
+
+            const diagnosisList = []; // Lista para armazenar todos os diagnósticos
+
+            for (const [key, range] of Object.entries(referenceRanges)) {
+                const inputValue = parseFloat(document.getElementById(key).value);
+                if (inputValue) {
+                    if (inputValue < range[0]) {
+                        const diagnosis = suggestions[key].below;
+                        results.push(`${key.replace(/_/g, ' ')}: ${inputValue} (Abaixo do normal: ${range[0]} - ${range[1]})`);
+                        results.push(`<div class="diagnostic-suggestions">Possíveis diagnósticos: ${diagnosis}</div>`);
+                        // Adiciona diagnósticos à lista
+                        diagnosisList.push(...diagnosis.split(', ').map(d => d.trim()));
+                    } else if (inputValue > range[1]) {
+                        const diagnosis = suggestions[key].above;
+                        results.push(`${key.replace(/_/g, ' ')}: ${inputValue} (Acima do normal: ${range[0]} - ${range[1]})`);
+                        results.push(`<div class="diagnostic-suggestions">Possíveis diagnósticos: ${diagnosis}</div>`);
+                        // Adiciona diagnósticos à lista
+                        diagnosisList.push(...diagnosis.split(', ').map(d => d.trim()));
+                    }
+                }
+            }
+
+            // Contar a frequência de cada diagnóstico
+            const diagnosisCount = diagnosisList.reduce((acc, diagnosis) => {
+                acc[diagnosis] = (acc[diagnosis] || 0) + 1;
+                return acc;
+            }, {});
+
+            // Adiciona diagnósticos potenciais
+            const potentialDiagnoses = Object.entries(diagnosisCount)
+                .filter(([_, count]) => count > 0) // Filtra diagnósticos que ocorreram
+                .sort((a, b) => b[1] - a[1]) // Ordena por contagem
+                .map(([diagnosis]) => diagnosis); // Extrai apenas os diagnósticos
+
+            if (potentialDiagnoses.length > 0) {
+                results.push(`<div class="potential-diagnosis">Diagnósticos Potenciais: ${potentialDiagnoses.join(', ')}</div>`);
+            }
+
+            const resultsContainer = document.getElementById('diagnosticResults');
+            resultsContainer.innerHTML = results.length > 0 ? results.join('<br>') : 'Todos os valores estão dentro dos limites de referência.';
+            showTab('diagnostico'); // Muda para a aba de diagnóstico
+            return false; // Impede o envio do formulário
+        }
+    </script>
+</body>
+</html>
